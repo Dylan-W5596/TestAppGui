@@ -1,13 +1,20 @@
 {
     "globalSettings" : {
         "version" : "0.0.0",
-        "auther" : "Dylan",
+        "auther" : "DylanWang330",
         "CreatDateTime" : "2025.7/31"
     },
 
     "account" : {
-        "Name" : "Dylan",
+        "Name" : "dylan",
         "PassWord" : "0000"
+    },
+
+    "windowConfig" : {
+        "computerWidth" : 2560,
+        "computerHeight" : 1440,
+        "width" : 900,
+        "height" : 600
     },
 
     "color" : {
@@ -20,6 +27,6 @@
 
     "font" : {
         "family" : "Fira Code",
-        "size" : "17"
+        "size" : 17
     }
 }

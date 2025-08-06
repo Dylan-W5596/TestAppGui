@@ -1,5 +1,6 @@
 import tkinter as tk
 import Pages.login as Login
+import Pages.home as Home
 import Pages.settings as Settings
 import json
 
@@ -11,6 +12,7 @@ class StyleClass:
 
         self.globalSettings = self.jsonFile["globalSettings"]
         self.account = self.jsonFile["account"]
+        self.windowConfig = self.jsonFile["windowConfig"]
         self.color = self.jsonFile["color"]
         self.font = self.jsonFile["font"]
 
@@ -36,20 +38,30 @@ print(style.globalSettings["version"]) #Version
 class Application(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("App")
-        self.geometry("800x600")
-        self.configure(bg="lightgray")
+        self.left = int((style.windowConfig["computerWidth"] - style.windowConfig["width"]) / 2) #get screen center
+        self.top = int((style.windowConfig["computerHeight"] - style.windowConfig["height"]) / 2) #get screen center
 
-        container = tk.Frame(self)
+        self.resizable(True, True)
+        self.maxsize(style.windowConfig["width"]+100, style.windowConfig["height"]+100)
+        self.minsize(style.windowConfig["width"], style.windowConfig["height"])
+
+        self.title("App")
+        self.geometry(f'{style.windowConfig["width"]}x{style.windowConfig["height"]}+{self.left}+{self.top}')
+        self.configure(bg=style.color["bg"])
+
+        container = tk.Frame(self, background=style.color["bg"], relief="sunken", borderwidth=100)
         container.pack(fill="both", expand=True)
 
         self.Frame = {}
 
         # Initialize frames
-        for F in (Login.Login_Page, Settings.Settings_Page):
+        for F in (Login.Login_Page, Home.Home_Page, Settings.Settings_Page):
             getFrames = F(container, self)
             self.Frame[F] = getFrames
             getFrames.grid(row=0, column=0, sticky="nsew")
+
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
         self.show_frame(Login.Login_Page)
 

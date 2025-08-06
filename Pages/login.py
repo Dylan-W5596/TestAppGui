@@ -1,4 +1,5 @@
 import tkinter as tk
+import time
 import Pages.home as Home
 import json
 
@@ -10,6 +11,7 @@ class StyleClass:
 
         self.globalSettings = self.jsonFile["globalSettings"]
         self.account = self.jsonFile["account"]
+        self.windowConfig = self.jsonFile["windowConfig"]
         self.color = self.jsonFile["color"]
         self.font = self.jsonFile["font"]
 
@@ -29,23 +31,78 @@ class StyleClass:
             print("⚠️ json not working.")
 
 style = StyleClass("Styles/styles.json") #Configure the style is in StyleClass
-print(style.globalSettings["version"]) #Version
 #---------------------------jsonLoading------------------
 
 class Login_Page(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
-        self.Label = tk.Label(self,
+        self.controller = controller  # Fix: assign controller to self.controller
+        #title
+        self.Title = tk.Label(self,
                               text="Login",
                               font=(style.font["family"], style.font["size"]),
-                              bg=style.color["background"],
-                              fg=style.color["text"])
-        self.Label.pack(pady=20)
+                              bg=style.color["bg"],
+                              fg=style.color["text"],
+                              anchor="center")
+        self.Title.pack(side="top", pady=30)
 
+        #UserName Part
+        user_frame = tk.Frame(self, bg=style.color["bg"])
+        user_frame.pack(pady=10)
+        self.nameEntryLabel = tk.Label(user_frame,
+                                     text="UserName : ",
+                                     font=(style.font["family"], style.font["size"]),
+                                     bg=style.color["bg"],
+                                     fg=style.color["text"])
+        self.nameEntryLabel.pack(side="left")
+
+        self.UsernameEntry = tk.Entry(user_frame,
+                                     font=(style.font["family"], style.font["size"]),
+                                     bg=style.color["bg"],
+                                     fg=style.color["text"])
+        self.UsernameEntry.pack(side="left")
+
+        #Password Part
+        password_frame = tk.Frame(self, bg=style.color["bg"])
+        password_frame.pack(pady=10)
+        self.passwordEntryLabel = tk.Label(password_frame,
+                                           text="Password : ",
+                                           font=(style.font["family"], style.font["size"]),
+                                           bg=style.color["bg"],
+                                           fg=style.color["text"])
+        self.passwordEntryLabel.pack(side="left")
+
+        self.PasswordEntry = tk.Entry(password_frame,
+                                    font=(style.font["family"], style.font["size"]),
+                                    bg=style.color["bg"],
+                                    fg=style.color["text"],)
+        self.PasswordEntry.pack(side="left", pady=10)
+
+        self.errorLabel = tk.Label(self,
+                                   text="",
+                                   font=(style.font["family"], style.font["size"]-5),
+                                   fg=style.color["error"])
+        self.errorLabel.pack(side="top", pady=10)
+
+        #Login Button
         self.LoginButton = tk.Button(self,
                                      text="Login",
-                                     command=lambda: controller.show_frame(Home.Home_Page),
+                                     command=self.login_process,
                                      font=(style.font["family"], style.font["size"]),
                                      bg=style.color["btnBg"],
                                      fg=style.color["error"])
-        self.LoginButton.pack(pady=10)
+        self.LoginButton.pack(side="top", pady=20)
+
+    def login_process(self):
+        InputUserName = self.UsernameEntry.get()
+        InputPassword = self.PasswordEntry.get()
+
+        if InputUserName == style.account["Name"] and InputPassword == style.account["PassWord"]:
+            # Switch to Home_Page
+            self.controller.show_frame(Home.Home_Page)
+            print("Login successful")
+        else:
+            print("Login failed")
+            self.errorLabel.config(text="Invalid username or password.")
+            time.sleep(1)  #delay some time
+            self.errorLabel.config(text="")

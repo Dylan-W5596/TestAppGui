@@ -10,6 +10,7 @@ class StyleClass:
 
         self.globalSettings = self.jsonFile["globalSettings"]
         self.account = self.jsonFile["account"]
+        self.windowConfig = self.jsonFile["windowConfig"]
         self.color = self.jsonFile["color"]
         self.font = self.jsonFile["font"]
 
@@ -29,16 +30,17 @@ class StyleClass:
             print("⚠️ json not working.")
 
 style = StyleClass("Styles/styles.json") #Configure the style is in StyleClass
-print(style.globalSettings["version"]) #Version
 #---------------------------jsonLoading------------------
 
 class Settings_Page(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
+        self.controller = controller
+
         self.Label = tk.Label(self,
                               text="Settings",
                               font=(style.font["family"], style.font["size"]),
-                              bg=style.color["background"],
+                              bg=style.color["bg"],
                               fg=style.color["text"])
         self.Label.pack(pady=20)
 
